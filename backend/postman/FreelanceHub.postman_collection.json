@@ -1,0 +1,331 @@
+{
+  "info": {
+    "name": "FreelanceHub API",
+    "description": "Complete API collection for FreelanceHub. Set {{baseUrl}} to your backend URL (e.g. http://localhost:5000/api). Run Auth > Register requests first to auto-save tokens via each request's Tests script, then the rest of the collection uses those automatically.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api" },
+    { "key": "clientToken", "value": "" },
+    { "key": "freelancerToken", "value": "" },
+    { "key": "adminToken", "value": "" },
+    { "key": "projectId", "value": "" },
+    { "key": "bidId", "value": "" },
+    { "key": "freelancerId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register Client",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "var data = pm.response.json();",
+            "if (data.token) pm.collectionVariables.set('clientToken', data.token);"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Test Client\",\n  \"email\": \"client@test.com\",\n  \"password\": \"123456\",\n  \"role\": \"client\"\n}" },
+            "url": "{{baseUrl}}/auth/register"
+          }
+        },
+        {
+          "name": "Register Freelancer",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "var data = pm.response.json();",
+            "if (data.token) pm.collectionVariables.set('freelancerToken', data.token);",
+            "if (data._id) pm.collectionVariables.set('freelancerId', data._id);"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Test Freelancer\",\n  \"email\": \"freelancer@test.com\",\n  \"password\": \"123456\",\n  \"role\": \"freelancer\"\n}" },
+            "url": "{{baseUrl}}/auth/register"
+          }
+        },
+        {
+          "name": "Register Admin",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "var data = pm.response.json();",
+            "if (data.token) pm.collectionVariables.set('adminToken', data.token);"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Admin User\",\n  \"email\": \"admin@test.com\",\n  \"password\": \"123456\",\n  \"role\": \"admin\"\n}" },
+            "url": "{{baseUrl}}/auth/register"
+          }
+        },
+        {
+          "name": "Login Client",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "var data = pm.response.json();",
+            "if (data.token) pm.collectionVariables.set('clientToken', data.token);"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"client@test.com\",\n  \"password\": \"123456\"\n}" },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        {
+          "name": "Login Freelancer",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "var data = pm.response.json();",
+            "if (data.token) pm.collectionVariables.set('freelancerToken', data.token);",
+            "if (data._id) pm.collectionVariables.set('freelancerId', data._id);"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"freelancer@test.com\",\n  \"password\": \"123456\"\n}" },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clientToken}}" }],
+            "url": "{{baseUrl}}/users/me"
+          }
+        },
+        {
+          "name": "Update My Profile (Freelancer)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{freelancerToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"bio\": \"Full-stack developer\",\n  \"skills\": [\"React\", \"Node.js\"],\n  \"experience\": \"2 years\"\n}" },
+            "url": "{{baseUrl}}/users/me"
+          }
+        },
+        {
+          "name": "Upload Profile Image",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{freelancerToken}}" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [{ "key": "profileImage", "type": "file", "src": "" }]
+            },
+            "url": "{{baseUrl}}/users/me/upload"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "Create Project (Client)",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "var data = pm.response.json();",
+            "if (data.project) pm.collectionVariables.set('projectId', data.project._id);"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{clientToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Build a landing page\",\n  \"description\": \"Need a responsive landing page built with React and Bootstrap.\",\n  \"budget\": 500,\n  \"category\": \"Web Development\",\n  \"skillsRequired\": [\"React\", \"Bootstrap\"]\n}" },
+            "url": "{{baseUrl}}/projects"
+          }
+        },
+        {
+          "name": "Browse Open Projects (Freelancer)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{freelancerToken}}" }],
+            "url": "{{baseUrl}}/projects?category=Web Development&search=landing"
+          }
+        },
+        {
+          "name": "My Projects (Client)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clientToken}}" }],
+            "url": "{{baseUrl}}/projects/my"
+          }
+        },
+        {
+          "name": "Get Project By Id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clientToken}}" }],
+            "url": "{{baseUrl}}/projects/{{projectId}}"
+          }
+        },
+        {
+          "name": "Update Project (Client, owner)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{clientToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"budget\": 600\n}" },
+            "url": "{{baseUrl}}/projects/{{projectId}}"
+          }
+        },
+        {
+          "name": "Mark Project Completed (Client, owner)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clientToken}}" }],
+            "url": "{{baseUrl}}/projects/{{projectId}}/complete"
+          }
+        },
+        {
+          "name": "Delete Project (Client, owner)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clientToken}}" }],
+            "url": "{{baseUrl}}/projects/{{projectId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bids",
+      "item": [
+        {
+          "name": "Submit Bid (Freelancer)",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "var data = pm.response.json();",
+            "if (data.bid) pm.collectionVariables.set('bidId', data.bid._id);"
+          ] } }],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{freelancerToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"projectId\": \"{{projectId}}\",\n  \"amount\": 450,\n  \"message\": \"I have 2 years experience building React landing pages and can deliver this in 5 days.\"\n}" },
+            "url": "{{baseUrl}}/bids"
+          }
+        },
+        {
+          "name": "Get Bids For Project (Client)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clientToken}}" }],
+            "url": "{{baseUrl}}/bids/project/{{projectId}}"
+          }
+        },
+        {
+          "name": "My Bids (Freelancer)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{freelancerToken}}" }],
+            "url": "{{baseUrl}}/bids/my"
+          }
+        },
+        {
+          "name": "Shortlist Bid (Client)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clientToken}}" }],
+            "url": "{{baseUrl}}/bids/{{bidId}}/shortlist"
+          }
+        },
+        {
+          "name": "Accept Bid (Client)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clientToken}}" }],
+            "url": "{{baseUrl}}/bids/{{bidId}}/accept"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reviews",
+      "item": [
+        {
+          "name": "Submit Review (after project completed)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{clientToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"projectId\": \"{{projectId}}\",\n  \"rating\": 5,\n  \"comment\": \"Great communication and delivered on time.\"\n}" },
+            "url": "{{baseUrl}}/reviews"
+          }
+        },
+        {
+          "name": "Get Reviews For User",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clientToken}}" }],
+            "url": "{{baseUrl}}/reviews/user/{{freelancerId}}"
+          }
+        },
+        {
+          "name": "Get Reviews For Project",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{clientToken}}" }],
+            "url": "{{baseUrl}}/reviews/project/{{projectId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/admin/users"
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/admin/users/{{freelancerId}}"
+          }
+        },
+        {
+          "name": "Get All Projects",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/admin/projects"
+          }
+        },
+        {
+          "name": "Delete Project (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/admin/projects/{{projectId}}"
+          }
+        },
+        {
+          "name": "Get Analytics",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/admin/analytics"
+          }
+        }
+      ]
+    }
+  ]
+}

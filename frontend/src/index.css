@@ -1,0 +1,166 @@
+/* index.css
+   Purpose: design tokens (colors, type) + small overrides on top of Bootstrap.
+   We are NOT replacing Bootstrap — just giving it a distinct personality
+   instead of shipping the default Bootstrap blue look. */
+
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+:root {
+  /* --- Color tokens --- */
+  --fh-navy: #16213e;
+  --fh-navy-light: #1f2d52;
+  --fh-amber: #e8a33d;
+  --fh-amber-dark: #c9861f;
+  --fh-bg: #f8f8f6;
+  --fh-slate: #5b6472;
+  --fh-ink: #1b1f27;
+  --fh-success: #2f9e68;
+  --fh-danger: #d64545;
+  --fh-border: #e3e1db;
+
+  /* --- Type tokens --- */
+  --fh-font-display: "Sora", system-ui, sans-serif;
+  --fh-font-body: "Inter", system-ui, sans-serif;
+}
+
+body {
+  background-color: var(--fh-bg);
+  color: var(--fh-ink);
+  font-family: var(--fh-font-body);
+}
+
+h1, h2, h3, h4, h5, .fh-display {
+  font-family: var(--fh-font-display);
+  color: var(--fh-navy);
+  letter-spacing: -0.01em;
+}
+
+/* --- Navbar --- */
+.fh-navbar {
+  background-color: var(--fh-navy);
+}
+.fh-navbar .navbar-brand {
+  font-family: var(--fh-font-display);
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: #fff !important;
+  letter-spacing: -0.02em;
+}
+.fh-navbar .nav-link {
+  color: rgba(255, 255, 255, 0.82) !important;
+  font-weight: 500;
+}
+.fh-navbar .nav-link:hover {
+  color: #fff !important;
+}
+.fh-navbar .badge-role {
+  background-color: var(--fh-amber);
+  color: var(--fh-navy);
+  font-weight: 600;
+  font-family: var(--fh-font-body);
+}
+
+/* --- Buttons: one primary action color, used deliberately --- */
+.btn-fh-primary {
+  background-color: var(--fh-amber);
+  border-color: var(--fh-amber);
+  color: var(--fh-navy);
+  font-weight: 600;
+}
+.btn-fh-primary:hover {
+  background-color: var(--fh-amber-dark);
+  border-color: var(--fh-amber-dark);
+  color: var(--fh-navy);
+}
+.btn-fh-outline {
+  background-color: transparent;
+  border: 1.5px solid var(--fh-navy);
+  color: var(--fh-navy);
+  font-weight: 600;
+}
+.btn-fh-outline:hover {
+  background-color: var(--fh-navy);
+  color: #fff;
+}
+
+/* --- Auth card --- */
+.fh-auth-wrapper {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(232, 163, 61, 0.08), transparent 40%),
+    var(--fh-bg);
+}
+.fh-auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: #fff;
+  border: 1px solid var(--fh-border);
+  border-left: 4px solid var(--fh-amber);
+  border-radius: 6px;
+  padding: 2.25rem;
+}
+.fh-auth-card .form-label {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--fh-slate);
+}
+.fh-auth-card .form-control:focus {
+  border-color: var(--fh-amber);
+  box-shadow: 0 0 0 3px rgba(232, 163, 61, 0.2);
+}
+
+/* --- Role selector (segmented, not a plain dropdown) --- */
+.fh-role-picker {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+.fh-role-option {
+  border: 1.5px solid var(--fh-border);
+  border-radius: 6px;
+  padding: 0.65rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--fh-slate);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+  text-align: center;
+}
+.fh-role-option.active {
+  border-color: var(--fh-navy);
+  background-color: var(--fh-navy);
+  color: #fff;
+}
+
+/* --- Generic status accent bar (used later for project/bid cards) --- */
+.fh-card-accent {
+  border-left: 4px solid var(--fh-border);
+}
+.fh-card-accent.is-open { border-left-color: var(--fh-amber); }
+.fh-card-accent.is-progress { border-left-color: var(--fh-navy); }
+.fh-card-accent.is-completed { border-left-color: var(--fh-success); }
+
+.fh-muted { color: var(--fh-slate); }
+
+.fh-link {
+  color: var(--fh-navy);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1.5px solid var(--fh-amber);
+}
+.fh-link:hover {
+  color: var(--fh-navy);
+}
+
+/* Focus visibility for accessibility */
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--fh-amber);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
